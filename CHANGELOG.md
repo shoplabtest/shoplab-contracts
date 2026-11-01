@@ -2,6 +2,9 @@
 
 Semver. Breaking contract changes bump the major version.
 
+## 1.2.0
+- iam: add `updateUser` (`PATCH /users/{id}`). Additive only.
+
 ## 1.1.0
 - cart-api: add `updateCartItem`, `removeCartItem`, `mergeCart`; optional `CartLine.latestUnitPrice`. Additive only.
 

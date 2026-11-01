@@ -41,6 +41,21 @@ paths:
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
         '404': { description: Not found }
+    patch:
+      operationId: updateUser
+      description: Change the display name. Allowed for the user themself or an admin.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [fullName], properties: { fullName: { type: string, minLength: 1 } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+        '400': { description: Blank name }
+        '403': { description: Not the user or an admin }
+        '404': { description: Not found }
 components:
   schemas:
     RegisterRequest:
