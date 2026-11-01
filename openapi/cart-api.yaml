@@ -27,11 +27,44 @@ paths:
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
         '422': { description: Invalid coupon }
+  /cart/items/{productId}:
+    patch:
+      operationId: updateCartItem
+      parameters:
+        - { name: productId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [quantity], properties: { quantity: { type: integer, minimum: 0, description: '0 removes the line' } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
+        '404': { description: Line not found }
+    delete:
+      operationId: removeCartItem
+      parameters:
+        - { name: productId, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
+        '404': { description: Line not found }
+  /cart/merge:
+    post:
+      operationId: mergeCart
+      description: Merge a guest cart into the logged-in user's cart after login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [guestCartId], properties: { guestCartId: { type: string } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
+        '401': { description: Not logged in }
   /cart/checkout:
     post:
       operationId: checkoutCart
       responses:
-        '202': { description: Accepted, emits cart.checked_out }
+        '202': { description: Accepted, emits cart.checked_out, content: { application/json: { schema: { type: object, properties: { cartId: { type: string } } } } } }
+        '409': { description: Cart is empty }
 components:
   schemas:
     CartLine:
@@ -41,6 +74,7 @@ components:
         productId: { type: string }
         quantity: { type: integer }
         unitPrice: { type: integer, description: 'minor units, snapshot at add time' }
+        latestUnitPrice: { type: integer, description: 'present when the catalog price has changed since the snapshot' }
     Cart:
       type: object
       required: [id, lines, total, currency]
