@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info: { title: ShopLab Cart API, version: 1.0.0 }
+paths:
+  /cart:
+    get:
+      operationId: getCart
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
+  /cart/items:
+    post:
+      operationId: addCartItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [productId, quantity], properties: { productId: { type: string }, quantity: { type: integer, minimum: 1 } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
+  /cart/coupon:
+    post:
+      operationId: applyCoupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [code], properties: { code: { type: string } } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Cart' } } } }
+        '422': { description: Invalid coupon }
+  /cart/checkout:
+    post:
+      operationId: checkoutCart
+      responses:
+        '202': { description: Accepted, emits cart.checked_out }
+components:
+  schemas:
+    CartLine:
+      type: object
+      required: [productId, quantity, unitPrice]
+      properties:
+        productId: { type: string }
+        quantity: { type: integer }
+        unitPrice: { type: integer, description: 'minor units, snapshot at add time' }
+    Cart:
+      type: object
+      required: [id, lines, total, currency]
+      properties:
+        id: { type: string }
+        lines: { type: array, items: { $ref: '#/components/schemas/CartLine' } }
+        coupon: { type: string, nullable: true }
+        total: { type: integer, description: minor units }
+        currency: { type: string }

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/cart.checked_out.schema.json",
+  "title": "cart.checked_out",
+  "type": "object",
+  "required": ["cartId","userId","total","currency","lines"],
+  "additionalProperties": true,
+  "properties": {"cartId":{"type":"string"},"userId":{"type":"string","format":"uuid"},"total":{"type":"integer"},"currency":{"type":"string"},"lines":{"type":"array","items":{"type":"object","required":["productId","quantity"],"properties":{"productId":{"type":"string"},"quantity":{"type":"integer"}}}}}
+}

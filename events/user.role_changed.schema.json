@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/user.role_changed.schema.json",
+  "title": "user.role_changed",
+  "type": "object",
+  "required": ["userId","oldRole","newRole"],
+  "additionalProperties": true,
+  "properties": {"userId":{"type":"string","format":"uuid"},"oldRole":{"type":"string"},"newRole":{"type":"string"}}
+}

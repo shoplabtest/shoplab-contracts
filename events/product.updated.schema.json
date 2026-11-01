@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/product.updated.schema.json",
+  "title": "product.updated",
+  "type": "object",
+  "required": ["productId","price","currency","updatedAt"],
+  "additionalProperties": true,
+  "properties": {"productId":{"type":"string"},"price":{"type":"integer","description":"minor units"},"currency":{"type":"string"},"updatedAt":{"type":"string","format":"date-time"}}
+}

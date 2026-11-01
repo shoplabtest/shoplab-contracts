@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info: { title: ShopLab Catalog API, version: 1.0.0 }
+paths:
+  /products:
+    get:
+      operationId: listProducts
+      parameters:
+        - { name: category, in: query, schema: { type: string } }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Product' } } } } }
+  /products/{id}:
+    get:
+      operationId: getProduct
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Product' } } } }
+        '404': { description: Not found }
+  /search:
+    get:
+      operationId: searchProducts
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string } }
+        - { name: sort, in: query, schema: { type: string, enum: [relevance, price_asc, price_desc] } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Product' } } } } }
+components:
+  schemas:
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount: { type: integer, description: minor units }
+        currency: { type: string, enum: [USD, EUR, GBP] }
+    Product:
+      type: object
+      required: [id, name, price, categoryId]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        price: { $ref: '#/components/schemas/Money' }
+        categoryId: { type: string }
+        imageUrl: { type: string }

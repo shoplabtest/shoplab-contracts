@@ -1,0 +1,13 @@
+{
+  "name": "@shoplab/contracts",
+  "version": "1.0.0",
+  "description": "ShopLab OpenAPI specs and event JSON Schemas",
+  "type": "module",
+  "files": ["openapi", "events"],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "yaml": "^2.6.1"
+  }
+}
