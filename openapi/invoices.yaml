@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info: { title: ShopLab Invoices, version: 1.0.0 }
+paths:
+  /invoices:
+    get:
+      operationId: listInvoices
+      description: Internal. Requires the x-internal-key header.
+      parameters:
+        - { name: x-internal-key, in: header, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Invoice' } } } } }
+        '401': { description: Missing or wrong key }
+  /invoices/order/{orderId}:
+    get:
+      operationId: getInvoiceForOrder
+      parameters:
+        - { name: orderId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: x-internal-key, in: header, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Invoice' } } } }
+        '404': { description: No invoice for that order }
+  /invoices/{id}/credit-notes:
+    post:
+      operationId: createCreditNote
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: x-internal-key, in: header, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [amount], properties: { amount: { type: integer, minimum: 1 }, reason: { type: string } } }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Invoice' } } } }
+components:
+  schemas:
+    Invoice:
+      type: object
+      required: [id, orderId, customerEmail, customerName, subtotal, tax, total, currency]
+      properties:
+        id: { type: string, format: uuid }
+        orderId: { type: string, format: uuid }
+        customerEmail: { type: string, format: email }
+        customerName: { type: string }
+        subtotal: { type: integer, description: minor units }
+        tax: { type: integer, description: minor units }
+        total: { type: integer, description: minor units }
+        currency: { type: string }

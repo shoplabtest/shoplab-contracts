@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/payment.captured.schema.json",
+  "title": "payment.captured",
+  "type": "object",
+  "required": ["paymentId","orderId","amount","currency","capturedAt"],
+  "additionalProperties": true,
+  "properties": {"paymentId":{"type":"string","format":"uuid"},"orderId":{"type":"string","format":"uuid"},"amount":{"type":"integer"},"currency":{"type":"string"},"capturedAt":{"type":"string","format":"date-time"}}
+}
