@@ -2,6 +2,9 @@
 
 Semver. Breaking contract changes bump the major version.
 
+## 1.3.0
+- Phase 2: orders, payments and invoices OpenAPI specs; events `order.placed`, `order.cancelled`, `payment.captured`, `payment.failed`. Additive only.
+
 ## 1.2.0
 - iam: add `updateUser` (`PATCH /users/{id}`). Additive only.
 
