@@ -13,7 +13,8 @@ paths:
       responses:
         '202': { description: Accepted, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
         '404': { description: Unknown order }
-        '409': { description: Order is not payable }
+        '409': { description: 'Order is not payable, or the order has used all its charge attempts' }
+        '502': { description: Orders service unavailable }
   /payments/{id}:
     get:
       operationId: getPayment
@@ -34,7 +35,9 @@ paths:
             schema: { type: object, required: [amount], properties: { amount: { type: integer, minimum: 1, description: minor units, partial refunds allowed } } }
       responses:
         '201': { description: Refunded, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
-        '409': { description: Amount exceeds what is left to refund }
+        '403': { description: Staff or admin only }
+        '404': { description: Not found }
+        '409': { description: 'Amount exceeds what is left to refund, or the payment is not captured' }
   /payments/webhook:
     post:
       operationId: receiveProviderWebhook
@@ -49,6 +52,7 @@ paths:
       responses:
         '204': { description: Processed }
         '401': { description: Bad signature }
+        '404': { description: Unknown payment }
 components:
   schemas:
     Payment:
