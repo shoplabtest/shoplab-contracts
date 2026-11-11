@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/stock.low.schema.json",
+  "title": "stock.low",
+  "type": "object",
+  "required": ["productId","available","threshold","at"],
+  "additionalProperties": true,
+  "properties": {"productId":{"type":"string"},"available":{"type":"integer"},"threshold":{"type":"integer"},"at":{"type":"string","format":"date-time"}}
+}

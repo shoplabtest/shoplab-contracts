@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/order.placed.schema.json",
+  "title": "order.placed",
+  "type": "object",
+  "required": ["orderId","userId","total","currency","lines","placedAt"],
+  "additionalProperties": true,
+  "properties": {"orderId":{"type":"string","format":"uuid"},"userId":{"type":"string","format":"uuid"},"total":{"type":"integer"},"currency":{"type":"string"},"lines":{"type":"array","items":{"type":"object","required":["productId","quantity"],"properties":{"productId":{"type":"string"},"quantity":{"type":"integer"},"unitPrice":{"type":["integer","null"]}}}},"placedAt":{"type":"string","format":"date-time"}}
+}

@@ -1,0 +1,75 @@
+openapi: 3.0.3
+info: { title: ShopLab Orders, version: 1.0.0 }
+paths:
+  /orders:
+    get:
+      operationId: listOrders
+      description: Order history of the logged-in user, newest first.
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/OrderSummary' } } } } }
+        '401': { description: Not logged in }
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '403': { description: Not the owner, staff or admin }
+        '404': { description: Not found }
+  /orders/{id}/cancel:
+    post:
+      operationId: cancelOrder
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object, properties: { reason: { type: string } } }
+      responses:
+        '200': { description: Cancelled, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '409': { description: The order can no longer be cancelled }
+  /orders/{id}/pack:
+    post:
+      operationId: packOrder
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Packed, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '409': { description: Order is not paid }
+  /orders/{id}/ship:
+    post:
+      operationId: shipOrder
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: Shipped, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '409': { description: Order is not packed }
+components:
+  schemas:
+    OrderStatus: { type: string, enum: [placed, paid, packed, shipped, cancelled] }
+    OrderSummary:
+      type: object
+      required: [id, status, total, currency, placedAt]
+      properties:
+        id: { type: string, format: uuid }
+        cartId: { type: string, description: The cart the order was created from; unique per order }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        total: { type: integer, description: minor units }
+        currency: { type: string }
+        placedAt: { type: string, format: date-time }
+    OrderLine:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId: { type: string }
+        quantity: { type: integer }
+        unitPrice: { type: integer, nullable: true, description: minor units, null when the catalog lookup failed at placement }
+    Order:
+      allOf:
+        - $ref: '#/components/schemas/OrderSummary'
+        - type: object
+          required: [userId, lines]
+          properties:
+            userId: { type: string, format: uuid }
+            lines: { type: array, items: { $ref: '#/components/schemas/OrderLine' } }
