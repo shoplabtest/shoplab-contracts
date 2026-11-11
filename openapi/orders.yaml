@@ -53,6 +53,7 @@ components:
       required: [id, status, total, currency, placedAt]
       properties:
         id: { type: string, format: uuid }
+        cartId: { type: string, description: The cart the order was created from; unique per order }
         status: { $ref: '#/components/schemas/OrderStatus' }
         total: { type: integer, description: minor units }
         currency: { type: string }
