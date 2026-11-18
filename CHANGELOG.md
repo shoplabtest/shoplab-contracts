@@ -2,6 +2,10 @@
 
 Semver. Breaking contract changes bump the major version.
 
+## 1.4.0
+- `scripts/generate.mjs` generates TypeScript types and a typed client (one method per `operationId`) from the OpenAPI specs; consumers commit the generated file.
+- Spec fixes, matching what the services return: `Cart.coupon` and `OrderSummary.cartId` are required, and the checkout answer requires `cartId`.
+
 ## 1.3.0
 - Phase 2: orders, payments and invoices OpenAPI specs; events `order.placed`, `order.cancelled`, `payment.captured`, `payment.failed`, `stock.low`. Additive only.
 

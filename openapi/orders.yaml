@@ -50,7 +50,7 @@ components:
     OrderStatus: { type: string, enum: [placed, paid, packed, shipped, cancelled] }
     OrderSummary:
       type: object
-      required: [id, status, total, currency, placedAt]
+      required: [id, cartId, status, total, currency, placedAt]
       properties:
         id: { type: string, format: uuid }
         cartId: { type: string, description: The cart the order was created from; unique per order }
