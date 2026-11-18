@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info: { title: ShopLab Payments, version: 1.0.0 }
+paths:
+  /payments/charges:
+    post:
+      operationId: createCharge
+      description: Charge the total of an order. The order is looked up in the orders service first.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [orderId, method], properties: { orderId: { type: string, format: uuid }, method: { type: string, enum: [card, wallet] } } }
+      responses:
+        '202': { description: Accepted, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
+        '404': { description: Unknown order }
+        '409': { description: 'Order is not payable, or the order has used all its charge attempts' }
+        '502': { description: Orders service unavailable }
+  /payments/{id}:
+    get:
+      operationId: getPayment
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
+        '404': { description: Not found }
+  /payments/{id}/refunds:
+    post:
+      operationId: createRefund
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [amount], properties: { amount: { type: integer, minimum: 1, description: minor units, partial refunds allowed } } }
+      responses:
+        '201': { description: Refunded, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
+        '403': { description: Staff or admin only }
+        '404': { description: Not found }
+        '409': { description: 'Amount exceeds what is left to refund, or the payment is not captured' }
+  /payments/webhook:
+    post:
+      operationId: receiveProviderWebhook
+      description: Called by the payment provider. The body is signed with HMAC-SHA256 in the x-provider-signature header.
+      parameters:
+        - { name: x-provider-signature, in: header, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [paymentId, outcome], properties: { paymentId: { type: string, format: uuid }, outcome: { type: string, enum: [captured, failed] }, reason: { type: string } } }
+      responses:
+        '204': { description: Processed }
+        '401': { description: Bad signature }
+        '404': { description: Unknown payment }
+components:
+  schemas:
+    Payment:
+      type: object
+      required: [id, orderId, status, amount, currency, refunded]
+      properties:
+        id: { type: string, format: uuid }
+        orderId: { type: string, format: uuid }
+        status: { type: string, enum: [pending, captured, failed, refunded, partially_refunded] }
+        amount: { type: integer, description: minor units }
+        currency: { type: string }
+        refunded: { type: integer, description: minor units refunded so far }

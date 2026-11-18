@@ -63,7 +63,7 @@ paths:
     post:
       operationId: checkoutCart
       responses:
-        '202': { description: Accepted, emits cart.checked_out, content: { application/json: { schema: { type: object, properties: { cartId: { type: string } } } } } }
+        '202': { description: Accepted, emits cart.checked_out, content: { application/json: { schema: { type: object, required: [cartId], properties: { cartId: { type: string } } } } } }
         '409': { description: Cart is empty }
 components:
   schemas:
@@ -77,7 +77,7 @@ components:
         latestUnitPrice: { type: integer, description: 'present when the catalog price has changed since the snapshot' }
     Cart:
       type: object
-      required: [id, lines, total, currency]
+      required: [id, lines, coupon, total, currency]
       properties:
         id: { type: string }
         lines: { type: array, items: { $ref: '#/components/schemas/CartLine' } }
