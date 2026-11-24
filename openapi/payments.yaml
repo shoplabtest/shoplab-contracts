@@ -17,7 +17,7 @@ paths:
         '502': { description: Orders service unavailable }
   /payments/{id}:
     get:
-      operationId: getPayment
+      operationId: getPaymentById
       parameters:
         - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
       responses:

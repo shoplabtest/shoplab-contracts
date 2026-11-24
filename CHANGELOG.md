@@ -2,6 +2,10 @@
 
 Semver. Breaking contract changes bump the major version.
 
+## 2.0.0
+- Orders: new operation `getOrderLines` (`GET /orders/{id}/lines`). Additive.
+- Breaking: payments operation `getPayment` is renamed `getPaymentById`, to match `getOrderById`-style naming used elsewhere. Clients regenerate with `scripts/generate.mjs`.
+
 ## 1.4.0
 - `scripts/generate.mjs` generates TypeScript types and a typed client (one method per `operationId`) from the OpenAPI specs; consumers commit the generated file.
 - Spec fixes, matching what the services return: `Cart.coupon` and `OrderSummary.cartId` are required, and the checkout answer requires `cartId`.

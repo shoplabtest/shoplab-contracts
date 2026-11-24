@@ -19,7 +19,7 @@ const out = generate(['orders', 'payments', 'cart-api']);
 
 test('every schema becomes a type and every JSON operation a method named by its operationId', () => {
   for (const name of ['OrderSummary', 'Order', 'OrderStatus', 'Payment', 'Cart', 'CartLine']) assert.match(out, new RegExp(`export (interface|type) ${name}\\b`));
-  for (const op of ['listOrders', 'getOrder', 'cancelOrder', 'createCharge', 'getPayment', 'createRefund', 'getCart', 'addCartItem', 'applyCoupon', 'checkoutCart']) assert.match(out, new RegExp(`\\n    ${op}: \\(`));
+  for (const op of ['listOrders', 'getOrder', 'getOrderLines', 'cancelOrder', 'createCharge', 'getPaymentById', 'createRefund', 'getCart', 'addCartItem', 'applyCoupon', 'checkoutCart']) assert.match(out, new RegExp(`\\n    ${op}: \\(`));
   assert.match(out, /export function createClient\(request: Request\)/);
   assert.match(out, /export type Client = ReturnType<typeof createClient>;/);
 });

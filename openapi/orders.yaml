@@ -17,6 +17,16 @@ paths:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
         '403': { description: Not the owner, staff or admin }
         '404': { description: Not found }
+  /orders/{id}/lines:
+    get:
+      operationId: getOrderLines
+      description: The lines of an order, without the rest of the order.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/OrderLine' } } } } }
+        '403': { description: Not the owner, staff or admin }
+        '404': { description: Not found }
   /orders/{id}/cancel:
     post:
       operationId: cancelOrder
