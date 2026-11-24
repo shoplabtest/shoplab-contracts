@@ -50,12 +50,12 @@ components:
     OrderStatus: { type: string, enum: [placed, paid, packed, shipped, cancelled] }
     OrderSummary:
       type: object
-      required: [id, cartId, status, total, currency, placedAt]
+      required: [id, cartId, status, grandTotal, currency, placedAt]
       properties:
         id: { type: string, format: uuid }
         cartId: { type: string, description: The cart the order was created from; unique per order }
         status: { $ref: '#/components/schemas/OrderStatus' }
-        total: { type: integer, description: minor units }
+        grandTotal: { type: integer, description: 'minor units, after discounts' }
         currency: { type: string }
         placedAt: { type: string, format: date-time }
     OrderLine:
