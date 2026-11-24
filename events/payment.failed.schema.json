@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/payment.failed.schema.json",
+  "title": "payment.failed",
+  "type": "object",
+  "required": ["paymentId","orderId","failedAt"],
+  "additionalProperties": true,
+  "properties": {"paymentId":{"type":"string","format":"uuid"},"orderId":{"type":"string","format":"uuid"},"reason":{"type":"string"},"failedAt":{"type":"string","format":"date-time"}}
+}

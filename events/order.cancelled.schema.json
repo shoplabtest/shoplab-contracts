@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shoplabtest.github.io/contracts/events/order.cancelled.schema.json",
+  "title": "order.cancelled",
+  "type": "object",
+  "required": ["orderId","userId","cancelledAt"],
+  "additionalProperties": true,
+  "properties": {"orderId":{"type":"string","format":"uuid"},"userId":{"type":"string","format":"uuid"},"reason":{"type":"string"},"cancelledAt":{"type":"string","format":"date-time"}}
+}

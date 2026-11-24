@@ -6,3 +6,11 @@ Published API specs and event schemas for ShopLab, versioned with semver (see CH
 - `events/<name>.schema.json`: one JSON Schema per event on the `shop.events` exchange.
 
 `npm test` checks unique operation ids, resolvable `$ref`s and well-formed event schemas.
+
+## Generated types and client
+
+```
+node ../shoplab-contracts/scripts/generate.mjs --services orders,payments --out src/generated/contracts.ts
+```
+
+Writes one TypeScript file with a type for every schema and `createClient(request)`, which has one method per operation named by its `operationId` (`client.listOrders()`, `client.createCharge({ orderId, method })`). Operations that do not return JSON (the invoice PDF) are not included. Add `--types-only` for a service that produces these responses and has no use for the client. Commit the generated file in the consumer and regenerate it when the contracts change; renaming an `operationId` or a schema field is a breaking change for everyone who regenerates.
